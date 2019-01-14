@@ -20,11 +20,16 @@ for link in soup.findAll('a', attrs={'href': re.compile("^https?://")}):
         continue
 
     url = download_link['href']
-    print(f'Downloading from {url}')
-    content = requests.get(url)
     parsed = urlparse(url)
     filename = os.path.basename(parsed.path)
+    if os.path.exists(filename):
+        continue
+
+    print(f'Downloading from {url}')
+    content = requests.get(url, stream=True)
 
     with open(filename, 'wb') as f:
         print(f'Writing {filename}')
-        f.write(content)
+        for chunk in content.iter_content(chunk_size=1024):
+            if chunk:            
+                f.write(chunk)
