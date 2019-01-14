@@ -22,7 +22,7 @@ for link in soup.findAll('a', attrs={'href': re.compile("^https?://")}):
     url = download_link['href']
     print(f'Downloading from {url}')
     content = requests.get(url)
-    parsed = urlparse.urlparse(url)
+    parsed = urlparse(url)
     filename = os.path.basename(parsed.path)
 
     with open(filename, 'wb') as f:
